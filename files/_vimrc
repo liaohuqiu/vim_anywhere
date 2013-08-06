@@ -1,0 +1,493 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Maintainer: 
+"       Amir Salihefendic
+"       http://amix.dk - amix@amix.dk
+"
+" Version: 
+"       5.0 - 29/05/12 15:43:36
+"
+" Blog_post: 
+"       http://amix.dk/blog/post/19691#The-ultimate-Vim-configuration-on-Github
+"
+" Awesome_version:
+"       Get this config, nice color schemes and lots of plugins!
+"
+"       Install the awesome version from:
+"
+"           https://github.com/amix/vimrc
+"
+" Syntax_highlighted:
+"       http://amix.dk/vim/vimrc.html
+"
+" Raw_version: 
+"       http://amix.dk/vim/vimrc.txt
+"
+" Sections:
+"    -> General
+"    -> VIM user interface
+"    -> Colors and Fonts
+"    -> Files and backups
+"    -> Text, tab and indent related
+"    -> Visual mode related
+"    -> Moving around, tabs and buffers
+"    -> Status line
+"    -> Editing mappings
+"    -> vimgrep searching and cope displaying
+"    -> Spell checking
+"    -> Misc
+"    -> Helper functions
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Sets how many lines of history VIM has to remember
+set history=700
+
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+
+" Set to auto read when a file is changed from the outside
+set autoread
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let start_period = ","
+let g:mapleader = ","
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set 7 lines to the cursor - when moving vertically using j/k
+set so=7
+
+" Turn on the WiLd menu
+set wildmenu
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+
+"Always show current position
+set ruler
+
+" Height of the command bar
+set cmdheight=2
+
+" A buffer becomes hidden when it is abandoned
+set hid
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases 
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" Show matching brackets when text indicator is over them
+set showmatch
+" How many tenths of a second to blink when matching brackets
+set mat=2
+
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+syntax enable "Enable syntax hl
+
+function! MySys()
+    if has("win32")
+        return "win"
+    else
+        return "linux"
+    endif
+endfunction
+
+" Set font according to system
+if MySys() == "mac"
+    set gfn=Menlo:h14
+    set shell=/bin/bash
+elseif MySys() == "win"
+    set gfn=Courier_New:h12:cANSI
+elseif MySys() == "linux"
+    set gfn=Monospace\ 10
+    set shell=/bin/bash
+endif
+
+if has("gui_running")
+    "set guioptions-=T
+    set t_Co=256
+    colorscheme my_color
+    set background=dark
+else
+    colorscheme zellner
+    set background=dark
+
+endif
+
+" 显示行号
+set nu
+set ruler
+
+set fileencodings=utf-8,ucs-bom,gbk,gb2312,utf-8,default,latin1
+set termencoding=utf-8
+let html_no_rendering=1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Files, backups and undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Turn backup off, since most stuff is in SVN, git et.c anyway...
+set nobackup
+set nowb
+set noswapfile
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use spaces instead of tabs
+set expandtab
+
+" Be smart when using tabs ;)
+set smarttab
+
+" 1 tab == 4 spaces
+set shiftwidth=4
+set tabstop=4
+
+" Linebreak on 500 characters
+set lbr
+set tw=500
+
+set ai "Auto indent
+set si "Smart indent
+set wrap "Wrap lines
+
+
+""""""""""""""""""""""""""""""
+" => Visual mode related
+""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :call VisualSelection('f')<CR>
+vnoremap <silent> # :call VisualSelection('b')<CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs, windows and buffers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Treat long lines as break lines (useful when moving around in them)
+map j gj
+map k gk
+
+" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+map <space> /
+map <c-space> ?
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :nohl<cr>
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Close the current buffer
+map <leader>bd :Bclose<cr>
+
+" Close all the buffers
+map <leader>ba :1,1000 bd!<cr>
+
+" Useful mappings for managing tabs
+map <leader>tn :tabnew<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
+
+" Specify the behavior when switching between buffers 
+try
+    "set switchbuf=useopen,usetab,newtab
+    set switchbuf=useopen,usetab
+    set stal=1
+catch
+endtry
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+            \ if line("'\"") > 0 && line("'\"") <= line("$") |
+            \   exe "normal! g`\"" |
+            \ endif
+" Remember info about open buffers on close
+set viminfo^=%
+
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+" Format the status line
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Editing mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Remap VIM 0 to first non-blank character
+map 0 ^
+
+" Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+if has("mac") || has("macunix")
+    nmap <D-j> <M-j>
+    nmap <D-k> <M-k>
+    vmap <D-j> <M-j>
+    vmap <D-k> <M-k>
+endif
+
+" Delete trailing white space on save, useful for Python and CoffeeScript ;)
+func! DeleteTrailingWS()
+    exe "normal mz"
+    %s/\s\+$//ge
+    exe "normal `z"
+endfunc
+autocmd BufWrite *.py :call DeleteTrailingWS()
+autocmd BufWrite *.php :call DeleteTrailingWS()
+autocmd BufWrite *.coffee :call DeleteTrailingWS()
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vimgrep searching and cope displaying
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" When you press gv/gr you vimgrep/grep after the selected text
+vnoremap <silent> gv :call VisualSelection('gv')<CR>
+vnoremap <silent> gr :call VisualSelection('gr')<CR>
+
+" set external grep
+if MySys() == "linux"
+    "grep -n $* /dev/null
+    set grepprg=grep\ -nri\ --exclude-dir\ '.svn'\ $*\ /dev/null
+elseif MySys() == "win"
+    set grepprg=findstr\ /s\ /n\ $*\ \ ^\\\|\ findstr\ /v\ /i\ /L\ \".svn\\\\\"
+endif
+
+
+" Open vimgrep and put the cursor in the right position
+map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
+
+" Vimgreps in the current file
+map <leader><space> :vimgrep // <C-R>%<C-A><right><right><right><right><right><right><right><right><right>
+
+" When you press <leader>r you can search and replace the selected text
+vnoremap <silent> <leader>r :call VisualSelection('replace')<CR>
+
+" Do :help cope if you are unsure what cope is. It's super useful!
+"
+" When you search with vimgrep, display your results in cope by doing:
+"   <leader>cc
+"
+" To go to the next search result do:
+"   <leader>n
+"
+" To go to the previous search results do:
+"   <leader>p
+"
+map <leader>cc :botright cope<cr>
+map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
+map <leader>n :cn<cr>
+map <leader>p :cp<cr>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Spell checking
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Pressing ,ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
+
+" Shortcuts using <leader>
+map <leader>sn ]s
+map <leader>sp [s
+map <leader>sa zg
+map <leader>s? z=
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Misc
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Remove the Windows ^M - when the encodings gets messed up
+noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+
+" Quickly open a buffer for scripbble
+map <leader>q :e ~/buffer<cr>
+
+" Toggle paste mode on and off
+map <leader>pp :setlocal paste!<cr>
+
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helper functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! CmdLine(str)
+    exe "menu Foo.Bar :" . a:str
+    emenu Foo.Bar
+    unmenu Foo
+endfunction
+
+function! VisualSelection(direction) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", '\\/.*$^~[]')
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'b'
+        execute "normal ?" . l:pattern . "^M"
+    elseif a:direction == 'gv'
+        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+    elseif a:direction == 'gr'
+        call CmdLine("grep " . l:pattern . ' **/*.')
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    elseif a:direction == 'f'
+        execute "normal /" . l:pattern . "^M"
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+
+
+" Returns true if paste mode is enabled
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE  '
+    en
+    return ''
+endfunction
+
+" Don't close window, when deleting a buffer
+command! Bclose call <SID>BufcloseCloseIt()
+function! <SID>BufcloseCloseIt()
+    let l:currentBufNum = bufnr("%")
+    let l:alternateBufNum = bufnr("#")
+
+    if buflisted(l:alternateBufNum)
+        buffer #
+    else
+        bnext
+    endif
+
+    if bufnr("%") == l:currentBufNum
+        new
+    endif
+
+    if buflisted(l:currentBufNum)
+        execute("bdelete! ".l:currentBufNum)
+    endif
+endfunction
+
+" tags
+set tags=tags;
+set autochdir
+let Tlist_Show_One_File=1
+let Tlist_Exit_OnlyWindow=1
+
+nnoremap <silent> <F3> :Grep<CR>
+
+""""""""""""""""""""""""""""""
+" netrw setting
+""""""""""""""""""""""""""""""
+let g:netrw_winsize = 30
+nmap <silent> <leader>fe :Sexplore<cr> 
+
+""""""""""""""""""""""""""""""
+" winManager
+""""""""""""""""""""""""""""""
+let g:winManagerWindowLayout='BufExplorer|TagList'
+let g:winManagerWidth = 30
+let g:defaultExplorer = 0
+nmap <leader>f :FirstExplorerWindow<cr>
+nmap <leader>b :BottomExplorerWindow<cr>
+nmap <silent> wm :WMToggle<cr>
+
+""""""""""""""""""""""""""""""
+" BufExplorer
+""""""""""""""""""""""""""""""
+let g:bufExplorerDefaultHelp=0       " Do not show default help.
+let g:bufExplorerShowRelativePath=1  " Show relative paths.
+let g:bufExplorerSortBy='mru'        " Sort by most recently used.
+let g:bufExplorerSplitRight=0        " Split left.
+let g:bufExplorerSplitVertical=1     " Split vertically.
+let g:bufExplorerSplitVertSize = 30  " Split width
+let g:bufExplorerUseCurrentWindow=1  " Open in new window.
+autocmd BufWinEnter \[Buf\ List\] setl nonumber
+
+""""""""""""""""""""""""""""""
+" jquery syntax highlight
+""""""""""""""""""""""""""""""
+au BufRead,BufNewFile *.js set syntax=jquery
+
+au FileType php call AddPHPFuncList()
+function! AddPHPFuncList()
+    if MySys() == "win"
+        set dictionary-=$vim/vimfiles/php_funclist.txt dictionary+=$vim/vimfiles/php_funclist.txt
+    else
+        set dictionary-=~/.vim/php_funclist.txt dictionary+=~/.vim/php_funclist.txt
+    endif
+    set complete-=k complete+=k
+endfunction
+
+" remove the ^M
+nmap <leader>m :%s/<C-v><C-m>//g<cr>
+nmap <leader>8 :set fileencoding=utf-8<cr>
+"nmap <leader>w :w!<cr>:call Save_to_ftp()<cr>
+nmap <leader>w :w!<cr>
+function! Save_to_ftp()
+    if MySys() == "win"
+        let l:srvIP = "192.168.0.197"
+        let l:fn = expand("%:p")
+        let l:userName = "huqiu"
+        let l:pwd = "123"
+        let l:uploaderFilePath = $VIM . "/plugins/kx_ftp_uploader/jonesiaDevHelperInterface.exe"
+        let l:argStr = printf("%s %s %s %s %s", l:srvIP, l:userName, l:pwd, "upload", l:fn)
+        let cmd = printf("silent !%s %s\r\n", l:uploaderFilePath, l:argStr)
+        exec cmd
+    endif
+endfunction
