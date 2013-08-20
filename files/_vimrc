@@ -302,7 +302,7 @@ vnoremap <silent> gr :call VisualSelection('gr')<CR>
 " set external grep
 if MySys() == "linux"
     "grep -n $* /dev/null
-    set grepprg=grep\ -nri\ --exclude-dir\ '.svn'\ $*\ /dev/null
+    set grepprg=grep\ -nr\ $*\ \ \\\|grep\ -v\ svn
 elseif MySys() == "win"
     set grepprg=findstr\ /s\ /n\ $*\ \ ^\\\|\ findstr\ /v\ /i\ /L\ \".svn\\\\\"
 endif
