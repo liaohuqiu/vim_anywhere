@@ -152,7 +152,8 @@ set nu
 set ruler
 
 set fileencodings=utf-8,ucs-bom,gbk,gb2312,utf-8,default,latin1
-set termencoding=gbk
+set termencoding=utf-8
+set encoding=utf-8
 let html_no_rendering=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -475,7 +476,8 @@ endfunction
 
 " remove the ^M
 nmap <leader>m :%s/<C-v><C-m>//g<cr>
-nmap <leader>8 :set fileencoding=utf-8<cr>
+nmap <leader>8 :set fileencoding=utf-8<cr>:w<cr>:set fenc<cr>
+nmap <leader>9 :set fileencoding=cp936<cr>:w<cr>:set fenc<cr>
 "nmap <leader>w :w!<cr>:call Save_to_ftp()<cr>
 nmap <leader>w :w!<cr>
 function! Save_to_ftp()
