@@ -148,12 +148,11 @@ else
 
 endif
 
-" 显示行号
 set nu
 set ruler
 
 set fileencodings=utf-8,ucs-bom,gbk,gb2312,utf-8,default,latin1
-set termencoding=utf-8
+set termencoding=gbk
 let html_no_rendering=1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
