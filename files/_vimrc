@@ -480,6 +480,7 @@ nmap <leader>8 :set fileencoding=utf-8<cr>:w<cr>:set fenc<cr>
 nmap <leader>9 :set fileencoding=cp936<cr>:w<cr>:set fenc<cr>
 "nmap <leader>w :w!<cr>:call Save_to_ftp()<cr>
 nmap <leader>w :w!<cr>
+nmap <leader>e :e
 function! Save_to_ftp()
     if MySys() == "win"
         let l:srvIP = "192.168.0.197"
