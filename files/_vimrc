@@ -464,23 +464,34 @@ autocmd BufWinEnter \[Buf\ List\] setl nonumber
 """"""""""""""""""""""""""""""
 au BufRead,BufNewFile *.js set syntax=jquery
 
+""""""""""""""""""""""""""""""
+" php 
+""""""""""""""""""""""""""""""
 au FileType php call AddPHPFuncList()
 function! AddPHPFuncList()
+    "php function
     if MySys() == "win"
         set dictionary-=$vim/vimfiles/php_funclist.txt dictionary+=$vim/vimfiles/php_funclist.txt
     else
         set dictionary-=~/.vim/php_funclist.txt dictionary+=~/.vim/php_funclist.txt
     endif
     set complete-=k complete+=k
+
+    " remove keyword $
+    setlocal iskeyword-=$
 endfunction
 
+""""""""""""""""""""""""""""""
+" quick map
+""""""""""""""""""""""""""""""
 " remove the ^M
-nmap <leader>m :%s/<C-v><C-m>//g<cr>
+nmap <leader>m :%s/<C-v><C-m>//g<cr>   
 nmap <leader>8 :set fileencoding=utf-8<cr>:w<cr>:set fenc<cr>
 nmap <leader>9 :set fileencoding=cp936<cr>:w<cr>:set fenc<cr>
-"nmap <leader>w :w!<cr>:call Save_to_ftp()<cr>
 nmap <leader>w :w!<cr>
 nmap <leader>e :e
+
+"nmap <leader>w :w!<cr>:call Save_to_ftp()<cr>
 function! Save_to_ftp()
     if MySys() == "win"
         let l:srvIP = "192.168.0.197"
