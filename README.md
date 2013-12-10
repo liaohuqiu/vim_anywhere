@@ -21,4 +21,3 @@ If you dont know what is the `$HOME` directory, open GVIM, type the command belo
 It will output something like:
 
     C:\Users\srain\     // This is the $HOME
-
