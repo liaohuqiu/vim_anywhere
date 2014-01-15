@@ -24,7 +24,7 @@ It will output something like:
 
 ####TODO
 
-In mac, should replace the `Exuberant CTags`(http://www.scholarslab.org/research-and-development/code-spelunking-with-ctags-and-vim/)
+In mac, should replace the [`Exuberant CTags`](http://www.scholarslab.org/research-and-development/code-spelunking-with-ctags-and-vim/)
 
     sudo port install ctags
     sudo ln -sf /opt/local/bin/ctags /usr/bin/ctags 
