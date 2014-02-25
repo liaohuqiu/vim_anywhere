@@ -178,6 +178,9 @@ set smarttab
 set shiftwidth=4
 set tabstop=4
 
+" Ruby
+autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+
 " Linebreak on 500 characters
 set lbr
 set tw=500
