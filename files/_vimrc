@@ -508,3 +508,6 @@ function! Save_to_ftp()
         exec cmd
     endif
 endfunction
+
+" add NERDTREE plugin for dir view on left window,making a shortcut here Ctrl+n=:NERDTreeToggle
+nmap <C-n> :NERDTreeToggle<CR>
