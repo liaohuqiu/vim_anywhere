@@ -337,6 +337,12 @@ map <leader>co ggVGy:tabnew<cr>:set syntax=qf<cr>pgg
 map <leader>n :cn<cr>
 map <leader>p :cp<cr>
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => set paste / set nopaste
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader>sp :set paste<cr>
+map <leader>snp :set nopaste<cr>
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
@@ -345,8 +351,8 @@ map <leader>p :cp<cr>
 map <leader>ss :setlocal spell!<cr>
 
 " Shortcuts using <leader>
-map <leader>sn ]s
-map <leader>sp [s
+" map <leader>sn ]s
+" map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 
@@ -447,9 +453,11 @@ nmap <silent> <leader>fe :Sexplore<cr>
 let g:winManagerWindowLayout='BufExplorer|TagList'
 let g:winManagerWidth = 30
 let g:defaultExplorer = 0
-nmap <leader>f :FirstExplorerWindow<cr>
+"using ':wincmd t' instead of 'FirstExplorerWindow'
+"nmap <leader>f :FirstExplorerWindow<cr>
+nmap <leader>f :wincmd t<cr>
 nmap <leader>b :BottomExplorerWindow<cr>
-nmap <silent> wm :WMToggle<cr>
+nmap <silent>wm :WMToggle<cr>
 
 """"""""""""""""""""""""""""""
 " BufExplorer
@@ -495,19 +503,7 @@ nmap <leader>9 :set fileencoding=cp936<cr>:w<cr>:set fenc<cr>
 nmap <leader>w :w!<cr>
 nmap <leader>e :e
 
-"nmap <leader>w :w!<cr>:call Save_to_ftp()<cr>
-function! Save_to_ftp()
-    if MySys() == "win"
-        let l:srvIP = "192.168.0.197"
-        let l:fn = expand("%:p")
-        let l:userName = "huqiu"
-        let l:pwd = "123"
-        let l:uploaderFilePath = $VIM . "/plugins/kx_ftp_uploader/jonesiaDevHelperInterface.exe"
-        let l:argStr = printf("%s %s %s %s %s", l:srvIP, l:userName, l:pwd, "upload", l:fn)
-        let cmd = printf("silent !%s %s\r\n", l:uploaderFilePath, l:argStr)
-        exec cmd
-    endif
-endfunction
-
 " add NERDTREE plugin for dir view on left window,making a shortcut here Ctrl+n=:NERDTreeToggle
 nmap <C-n> :NERDTreeToggle<CR>
+let g:NERDTreeWinPos = "right"
+let NERDTreeHijackNetrw=0

@@ -2863,6 +2863,7 @@ function! s:createTreeWin()
 
     if !exists('t:NERDTreeBufName')
         let t:NERDTreeBufName = s:nextBufferName()
+        " silent! exec splitLocation . 'vertical ' . splitSize . ' new'
         silent! exec splitLocation . 'vertical ' . splitSize . ' new'
         silent! exec "edit " . t:NERDTreeBufName
     else
