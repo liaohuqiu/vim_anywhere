@@ -477,6 +477,11 @@ autocmd BufWinEnter \[Buf\ List\] setl nonumber
 au BufRead,BufNewFile *.js set syntax=jquery
 
 """"""""""""""""""""""""""""""
+" twig 
+""""""""""""""""""""""""""""""
+au BufRead,BufNewFile *.twig setf html
+
+""""""""""""""""""""""""""""""
 " php 
 """"""""""""""""""""""""""""""
 au FileType php call AddPHPFuncList()
