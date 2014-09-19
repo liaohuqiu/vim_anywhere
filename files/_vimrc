@@ -451,7 +451,7 @@ nmap <silent> <leader>fe :Sexplore<cr>
 " winManager
 """"""""""""""""""""""""""""""
 let g:winManagerWindowLayout='BufExplorer|TagList'
-let g:winManagerWidth = 30
+let g:winManagerWidth = 40
 let g:defaultExplorer = 0
 "using ':wincmd t' instead of 'FirstExplorerWindow'
 "nmap <leader>f :FirstExplorerWindow<cr>
@@ -508,6 +508,8 @@ nmap <leader>8 :set fileencoding=utf-8<cr>:w<cr>:set fenc<cr>
 nmap <leader>9 :set fileencoding=cp936<cr>:w<cr>:set fenc<cr>
 nmap <leader>w :w!<cr>
 nmap <leader>e :e
+" for NERDTreeFind
+nmap ,n :NERDTreeFind<CR>
 
 " add NERDTREE plugin for dir view on left window,making a shortcut here Ctrl+n=:NERDTreeToggle
 nmap <C-n> :NERDTreeToggle<CR>
