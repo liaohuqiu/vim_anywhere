@@ -32,3 +32,14 @@ In mac, should replace the [`Exuberant CTags`](http://www.scholarslab.org/resear
 In Minimum Installation CentOS
 
     sudo yum install -y ctags
+
+
+### Usage
+
+|keys| usage|
+|---|---|
+|`ctrl + p` | CtrlP |
+|`wm`       | toggle left window|
+|`,f`       |   go to first window  |
+|`,sp`      | :set paste            |
+|`,snp`     |  `:set nopaste`       |
