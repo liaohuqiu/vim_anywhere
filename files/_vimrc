@@ -180,6 +180,8 @@ set tabstop=4
 
 " Ruby
 autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType coffee setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+" autocmd FileType less setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
 " Linebreak on 500 characters
 set lbr
@@ -515,3 +517,5 @@ nmap ,n :NERDTreeFind<CR>
 nmap <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeWinPos = "right"
 let NERDTreeHijackNetrw=0
+nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
+call pathogen#infect()
