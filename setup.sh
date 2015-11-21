@@ -21,3 +21,6 @@ fi
 
 exe_cmd "ln -sf $root_dir/files/vimfiles  $vim_alias_dir"
 exe_cmd "ln -sf $root_dir/files/_vimrc $vim_rc"
+
+exe_cmd 'git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
+exe_cmd 'vim +PluginInstall +qall'
