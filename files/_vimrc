@@ -59,6 +59,9 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'JulesWang/css.vim' " only necessary if your Vim version < 7.4
 Plugin 'cakebaker/scss-syntax.vim'
 Plugin 'groenewege/vim-less'
+Plugin 'mxw/vim-jsx'
+Plugin 'digitaltoad/vim-jade'
+let g:jsx_ext_required = 0
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -222,6 +225,8 @@ autocmd FileType scss setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType js setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType javascript.jsx setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType jade setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
 " Linebreak on 500 characters
 set lbr
