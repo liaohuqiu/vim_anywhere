@@ -498,7 +498,7 @@ nmap <silent> <leader>fe :Sexplore<cr>
 " winManager
 """"""""""""""""""""""""""""""
 let g:winManagerWindowLayout='BufExplorer|TagList'
-let g:winManagerWidth = 40
+let g:winManagerWidth = 50
 let g:defaultExplorer = 0
 "using ':wincmd t' instead of 'FirstExplorerWindow'
 "nmap <leader>f :FirstExplorerWindow<cr>
