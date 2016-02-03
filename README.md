@@ -6,7 +6,7 @@
 
 Execute the `setup.sh`
 
-    sh setup.sh
+    bash setup.sh
 
 ### windows ###
 
@@ -26,13 +26,15 @@ It will output something like:
 
 In mac, should replace the [`Exuberant CTags`](http://www.scholarslab.org/research-and-development/code-spelunking-with-ctags-and-vim/)
 
-    sudo port install ctags
-    sudo ln -sf /opt/local/bin/ctags /usr/bin/ctags 
+    brew install ctags
 
 In Minimum Installation CentOS
 
     sudo yum install -y ctags
 
+In Ubuntu
+
+    sudo apt-get install exuberant-ctags
 
 ### Usage
 
