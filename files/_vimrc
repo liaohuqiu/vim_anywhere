@@ -224,6 +224,8 @@ autocmd FileType css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType scss setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType js setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType html setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType htmldjango setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType javascript.jsx setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType jade setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
