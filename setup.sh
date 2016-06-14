@@ -24,3 +24,11 @@ exe_cmd "ln -sf $root_dir/files/_vimrc $vim_rc"
 
 exe_cmd 'git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
 exe_cmd 'vim +PluginInstall +qall'
+
+if type "brew" > /dev/null 2>&1; then
+    exe_cmd "brew install ctags"
+elif type "yum" > /dev/null 2>&1; then
+    exe_cmd "sudo yum install -y ctags"
+elif type "apt-get" > /dev/null 2>&1; then
+    exe_cmd "sudo apt-get install exuberant-ctags"
+fi

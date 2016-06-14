@@ -24,6 +24,8 @@ It will output something like:
 
 ####TODO
 
+**It's done now, ctag will be install on different platforms**
+
 In mac, should replace the [`Exuberant CTags`](http://www.scholarslab.org/research-and-development/code-spelunking-with-ctags-and-vim/)
 
     brew install ctags
