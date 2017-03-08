@@ -500,7 +500,7 @@ nmap <silent> <leader>fe :Sexplore<cr>
 " winManager
 """"""""""""""""""""""""""""""
 let g:winManagerWindowLayout='BufExplorer|TagList'
-let g:winManagerWidth = 50
+let g:winManagerWidth = 40
 let g:defaultExplorer = 0
 "using ':wincmd t' instead of 'FirstExplorerWindow'
 "nmap <leader>f :FirstExplorerWindow<cr>
@@ -566,3 +566,4 @@ let g:NERDTreeWinPos = "right"
 let NERDTreeHijackNetrw=0
 nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
 call pathogen#infect()
+hi Search cterm=NONE ctermfg=grey ctermbg=blue
