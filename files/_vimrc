@@ -229,6 +229,7 @@ autocmd FileType htmldjango setlocal expandtab shiftwidth=2 tabstop=2 softtabsto
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType javascript.jsx setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType jade setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
+autocmd FileType yaml setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 
 " Linebreak on 500 characters
 set lbr
