@@ -1,0 +1,52 @@
+#!/bin/bash
+
+vim_config_dir=$HOME/.vim
+vim_rc=$HOME/.vimrc
+
+function exe_cmd() {
+    echo $1
+    eval $1
+}
+
+function ensure_dir() {
+    if [ ! -d $1 ]; then
+        exe_cmd "mkdir -p $1"
+    fi
+}
+
+function backup_and_clean() {
+    local d=`date +%Y%m%d-%H%M%S`
+    local backup_dir="$HOME/.vimbackup/${d}"
+    ensure_dir $backup_dir
+
+    if [ -e $vim_rc ]; then
+        exe_cmd "mv $vim_rc  $backup_dir/.vimrc"
+    fi
+
+    if [ -e $vim_config_dir ]; then
+        exe_cmd "cp -R $vim_config_dir/* $backup_dir/"
+        exe_cmd "rm -rf $vim_config_dir"
+    fi 
+}
+
+function copy_new_config() {
+    local root_dir=`pwd`
+    exe_cmd "cp $root_dir/files/_vimrc $vim_rc"
+
+    ensure_dir $vim_config_dir
+    exe_cmd "cp -R $root_dir/files/vimfiles/*  $vim_config_dir/"
+    exe_cmd "cp -R $root_dir/3rd/bundle $vim_config_dir/"
+}
+
+function update_bundle() {
+    local root_dir=`pwd`
+    exe_cmd 'rm -rf ~/.vim/bundle'
+    exe_cmd 'mkdir -p ~/.vim/bundle'
+    exe_cmd 'git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
+    exe_cmd "cp ~/.vim/bundle $root_dir/3rd"
+    find 3rd -type d -name ".git" -exec rm -rf {} \;
+}
+
+backup_and_clean
+copy_new_config
+exe_cmd 'vim +PluginInstall +qall'
