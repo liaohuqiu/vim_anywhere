@@ -2,7 +2,7 @@
 
 ## Installation
 
-I recommend to use a plugin manager like [Vundle](https://github.com/VundleVim/Vundle.vim) for the installation.
+I recommend to use a plugin manager like [Vundle](https://github.com/gmarik/vundle) for the installation.
 
 ### Vundle
 
@@ -14,12 +14,6 @@ Plugin 'cakebaker/scss-syntax.vim'
 ```
 
 Afterwards, run `:PluginInstall` in Vim.
-
-### Pathogen
-
-```Bash
-git clone https://github.com/cakebaker/scss-syntax.vim ~/.vim/bundle/scss-syntax
-```
 
 ### Manual
 

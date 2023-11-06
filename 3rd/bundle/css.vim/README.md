@@ -1,6 +1,3 @@
-[deprecated] 301 jump to https://github.com/jsit/css.vim
-
-
 Vim CSS Syntax File
 ------------
 

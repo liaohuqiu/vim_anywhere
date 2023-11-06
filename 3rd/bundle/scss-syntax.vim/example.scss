@@ -1070,8 +1070,3 @@ div {
 div {
   foo: 10px;
 }
-
-// issue #70: string is not recognized as string if it contains open bracket(s)
-div {
-  background-image   : url("{{ 'neat-background-product.png' | asset_url }}");
-}
