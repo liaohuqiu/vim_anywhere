@@ -1,5 +1,7 @@
 #!/bin/bash
 
+__root_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
 vim_config_dir=$HOME/.vim
 vim_rc=$HOME/.vimrc
 
@@ -24,26 +26,24 @@ function backup_and_clean() {
     fi
 
     if [ -e $vim_config_dir ]; then
-        exe_cmd "cp -R $vim_config_dir/* $backup_dir/"
+        exe_cmd "cp -R $vim_config_dir $backup_dir/.vim"
         exe_cmd "rm -rf $vim_config_dir"
     fi 
 }
 
 function copy_new_config() {
-    local root_dir=`pwd`
-    exe_cmd "cp $root_dir/files/_vimrc $vim_rc"
+    exe_cmd "cp $__root_dir/files/_vimrc $vim_rc"
 
     ensure_dir $vim_config_dir
-    exe_cmd "cp -R $root_dir/files/vimfiles/*  $vim_config_dir/"
-    exe_cmd "cp -R $root_dir/3rd/bundle $vim_config_dir/"
+    exe_cmd "cp -R $__root_dir/files/vimfiles/*  $vim_config_dir/"
+    exe_cmd "cp -R $__root_dir/3rd/bundle $vim_config_dir/"
 }
 
 function update_bundle() {
-    local root_dir=`pwd`
     exe_cmd 'rm -rf ~/.vim/bundle'
     exe_cmd 'mkdir -p ~/.vim/bundle'
     exe_cmd 'git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
-    exe_cmd "cp ~/.vim/bundle $root_dir/3rd"
+    exe_cmd "cp ~/.vim/bundle $__root_dir/3rd"
     find 3rd -type d -name ".git" -exec rm -rf {} \;
 }
 
