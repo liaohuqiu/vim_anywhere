@@ -39,14 +39,6 @@ function copy_new_config() {
     exe_cmd "cp -R $__root_dir/3rd/bundle $vim_config_dir/"
 }
 
-function update_bundle() {
-    exe_cmd 'rm -rf ~/.vim/bundle'
-    exe_cmd 'mkdir -p ~/.vim/bundle'
-    exe_cmd 'git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
-    exe_cmd "cp ~/.vim/bundle $__root_dir/3rd"
-    find 3rd -type d -name ".git" -exec rm -rf {} \;
-}
-
 backup_and_clean
 copy_new_config
 exe_cmd 'vim +PluginInstall +qall'

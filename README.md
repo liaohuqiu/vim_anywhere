@@ -1,42 +1,20 @@
-# Work with vim anywhere. #
+## Install
 
-## install ##
+### Install ctag
 
-### linux ###
+Should install ctag first. 
 
-Execute the `setup.sh`
+In Mac, should replace the [`Exuberant CTags`](http://www.scholarslab.org/research-and-development/code-spelunking-with-ctags-and-vim/)
 
-    bash setup.sh
+```
+brew install ctags
+```
 
-### windows ###
+### Setup
 
-You may need to install GVIM in your system first.
-
-After install, copy all the files in the directory `files` to the `$HOME` directory.
-
-If you dont know what is the `$HOME` directory, open GVIM, type the command below:
-
-    :ehco $HOME
-
-It will output something like:
-
-    C:\Users\srain\     // This is the $HOME
-
-####TODO
-
-**It's done now, ctag will be install on different platforms**
-
-In mac, should replace the [`Exuberant CTags`](http://www.scholarslab.org/research-and-development/code-spelunking-with-ctags-and-vim/)
-
-    brew install ctags
-
-In Minimum Installation CentOS
-
-    sudo yum install -y ctags
-
-In Ubuntu
-
-    sudo apt-get install exuberant-ctags
+```
+bash fast-setup.sh
+```
 
 ### Usage
 

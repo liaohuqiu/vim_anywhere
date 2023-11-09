@@ -1,27 +1,52 @@
 #!/bin/bash
+
+__root_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+
+vim_config_dir=$HOME/.vim
+vim_rc=$HOME/.vimrc
+
 function exe_cmd() {
     echo $1
     eval $1
 }
 
-root_dir=`pwd`
+function ensure_dir() {
+    if [ ! -d $1 ]; then
+        exe_cmd "mkdir -p $1"
+    fi
+}
 
-vim_alias_dir=$HOME/.vim
-vim_rc=$HOME/.vimrc
-d=`date +%Y%m%d-%H%M%S`
+function backup_and_clean() {
+    local d=`date +%Y%m%d-%H%M%S`
+    local backup_dir="$HOME/.vimbackup/${d}"
+    ensure_dir $backup_dir
 
-if [ -e $vim_alias_dir ]; then
-    exe_cmd "cp -R  $vim_alias_dir  $HOME/vim_${d}"
-    exe_cmd "rm -r $vim_alias_dir"
-fi 
+    if [ -e $vim_rc ]; then
+        exe_cmd "mv $vim_rc  $backup_dir/.vimrc"
+    fi
 
-if [ -e $vim_rc ]; then
-    exe_cmd "mv $vim_rc  $HOME/vimrc_${d}"
-fi
+    if [ -e $vim_config_dir ]; then
+        exe_cmd "cp -R $vim_config_dir $backup_dir/.vim"
+        exe_cmd "rm -rf $vim_config_dir"
+    fi 
+}
 
-exe_cmd "ln -sf $root_dir/files/vimfiles  $vim_alias_dir"
-exe_cmd "ln -sf $root_dir/files/_vimrc $vim_rc"
+function copy_new_config() {
+    exe_cmd "cp $__root_dir/files/_vimrc $vim_rc"
 
-exe_cmd 'git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
-exe_cmd 'vim +PluginInstall +qall'
+    ensure_dir $vim_config_dir
+    exe_cmd "cp -R $__root_dir/files/vimfiles/*  $vim_config_dir/"
+    exe_cmd "cp -R $__root_dir/3rd/bundle $vim_config_dir/"
+}
 
+function install_bundle() {
+    exe_cmd 'rm -rf ~/.vim/bundle'
+    exe_cmd 'mkdir -p ~/.vim/bundle'
+    exe_cmd 'git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim'
+    exe_cmd 'vim +PluginInstall +qall'
+}
+
+
+backup_and_clean
+copy_new_config
+install_bundle
