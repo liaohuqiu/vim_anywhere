@@ -23,7 +23,6 @@
 "       http://amix.dk/vim/vimrc.txt
 "
 " Sections:
-"    -> Vundle
 "    -> General
 "    -> VIM user interface
 "    -> Colors and Fonts
@@ -39,44 +38,6 @@
 "    -> Helper functions
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vundle
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-set nocompatible              " be iMproved, required
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
-
-Plugin 'JulesWang/css.vim' " only necessary if your Vim version < 7.4
-Plugin 'cakebaker/scss-syntax.vim'
-Plugin 'groenewege/vim-less'
-Plugin 'mxw/vim-jsx'
-Plugin 'digitaltoad/vim-jade'
-let g:jsx_ext_required = 0
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -217,18 +178,7 @@ set smarttab
 set shiftwidth=4
 set tabstop=4
 
-autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType coffee setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType less setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType css setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType scss setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType js setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType javascript setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType html setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType htmldjango setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType javascript.jsx setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-autocmd FileType jade setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType yaml setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
 autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=4 softtabstop=4
 
@@ -521,17 +471,6 @@ let g:bufExplorerUseCurrentWindow=1  " Open in new window.
 autocmd BufWinEnter \[Buf\ List\] setl nonumber
 
 """"""""""""""""""""""""""""""
-" jquery syntax highlight
-""""""""""""""""""""""""""""""
-au BufRead,BufNewFile *.js set syntax=jquery
-
-""""""""""""""""""""""""""""""
-" twig 
-""""""""""""""""""""""""""""""
-au BufRead,BufNewFile *.twig setf html 
-au BufRead,BufNewFile *.twig setlocal expandtab shiftwidth=2 tabstop=2 softtabstop=2
-
-""""""""""""""""""""""""""""""
 " php 
 """"""""""""""""""""""""""""""
 au FileType php call AddPHPFuncList()
@@ -560,10 +499,9 @@ nmap <leader>e :e
 " for NERDTreeFind
 nmap ,n :NERDTreeFind<CR>
 
-" add NERDTREE plugin for dir view on left window,making a shortcut here Ctrl+n=:NERDTreeToggle
+" add NERDTREE plugin for dir view on left window, making a shortcut here Ctrl+n=:NERDTreeToggle
 nmap <C-n> :NERDTreeToggle<CR>
 let g:NERDTreeWinPos = "right"
 let NERDTreeHijackNetrw=0
-nnoremap <Leader>m :w <BAR> !lessc % > %:t:r.css<CR><space>
 call pathogen#infect()
 hi Search cterm=NONE ctermfg=grey ctermbg=blue
