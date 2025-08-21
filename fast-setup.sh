@@ -36,7 +36,7 @@ function copy_new_config() {
 
     ensure_dir $vim_config_dir
     exe_cmd "cp -R $__root_dir/files/vimfiles/*  $vim_config_dir/"
-    exe_cmd "cp -R $__root_dir/3rd/bundle $vim_config_dir/"
+    # exe_cmd "cp -R $__root_dir/3rd/bundle $vim_config_dir/"
 }
 
 backup_and_clean
