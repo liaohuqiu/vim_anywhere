@@ -1,0 +1,44 @@
+{
+  "name": "vhash-vscode-ext",
+  "displayName": "VHash Tools",
+  "description": "VHash tools for copying path with line range.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "repository": {
+    "type": "git",
+    "url": "https://example.com/local/vhash-vscode-ext.git"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:vhashTools.copySelectionPathRange"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vhashTools.copySelectionPathRange",
+        "title": "VHash: Copy Path With Line Range"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "vhashTools.copySelectionPathRange",
+        "key": "shift+cmd+c",
+        "when": "editorTextFocus"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.3.3"
+  }
+}
