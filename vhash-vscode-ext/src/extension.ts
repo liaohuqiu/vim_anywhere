@@ -33,7 +33,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const document = editor.document;
     const relPath = getAbsolutePath(document);
     const { startLine, endLine } = getSelectionRange(editor);
-    const text = `@${relPath}:${startLine}-${endLine}`;
+    const text = `${relPath}:${startLine}-${endLine}`;
 
     vscode.env.clipboard.writeText(text);
     vscode.window.showInformationMessage(`Copied: ${text}`);

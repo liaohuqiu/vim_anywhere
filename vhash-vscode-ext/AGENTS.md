@@ -11,14 +11,14 @@
 
 ## 功能行为
 
-- 复制当前文件的相对路径与行号范围，格式为 `@relative/path.py:start-end`。
+- 复制当前文件的路径与行号范围，格式为 `path.py:start-end`（可为相对或绝对路径）。
 - 如果没有选区，则使用光标所在行，起止行相同。
 - 如果选区结束位置在下一行第 0 列，则结束行会减 1，避免多算空行。
 
 ## 示例输出
 
-- `@src/app.py:10-42`
-- `@/Users/liaohuqiu/.../vhash-vscode-ext/AGENTS.md:20-20`
+- `src/app.py:10-42`
+- `/Users/liaohuqiu/.../vhash-vscode-ext/AGENTS.md:20-20`
 
 ## 本地安装（Cursor / VS Code）
 
@@ -66,3 +66,8 @@
   "command": "workbench.action.nextEditor"
 }
 ```
+
+{
+  "key": "shift+cmd+e",
+  "command": "workbench.files.action.showActiveFileInExplorer"
+}
