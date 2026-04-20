@@ -1,0 +1,289 @@
+schema:
+  author:
+    - {}
+  dependencies:
+    - core2022  #自定义字集工具方案
+    - PY_c  # 拼音方案
+    - easy_english # 英文
+  description: |
+    虎码官方单字
+    敲 ` 鍵進入拼音反查
+  name: "虎码官方单字"
+  schema_id: tiger
+  version: 0.9
+
+
+switches: # 0 默认关，1 默认开
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]  #中英文状态
+  - name: extended_char  #自定义字集
+    reset: 1
+    states: [ 全字集 , 常用字 ]
+  - name: pinyin  #拼音滤镜
+    reset: 0
+    states: [ 拼, pīn ]
+  - name: emoji_cn  #emoji滤镜
+    reset: 0
+    states: [ 🈚, 🈶 ]
+  - name: chaifen
+    reset: 0 
+    states: [ 拆隐, 拆显 ]
+  # - options: [ gb2312, gbk, utf8 ]
+  #   states: [ gb2312, GBK, UTF-8 ]
+  #   reset: 0
+  - name: simplification  #简转繁滤镜
+    reset: 0
+    states: [ 简中, 繁中 ]
+  - options: [_keyboard_default, _keyboard_defaultbk, _keyboard_defaultwk]
+    reset: 0
+    states: [ 有刻, 半刻, 无刻 ]
+  - name: charset_comment_filter  #字符集提示
+    reset: 0  
+    states: [ U区关, U区开 ]
+  - name: udpf_switch
+    reset: 0
+    states: [ U编关, U编开]
+  - name: ascii_punct
+    reset: 0
+    states: [ 。，, ．， ]
+  # - name: dz_ci  #过滤词组
+  #   reset: 0
+  #   states: [ 词组, 单字 ]
+  - options: [_keyboard_default, _keyboard_defaultzj]
+    reset: 0
+    states: [ 助记关, 助记开 ]
+  # - name: fanjian  #繁转简滤镜
+  #   reset: 0
+  #   states: [ 反繁, 反简 ]
+  - name: full_shape
+    reset: 0
+    states: [ 半角, 全角 ]
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - lua_processor@command_executor
+    - lua_processor@reverse_lookup_logger
+    - selector
+    - navigator
+    - express_editor #计算
+  segmentors:  # 分段
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@easy_english #英文相关
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - lua_translator@command_palette
+    - punct_translator
+    - reverse_lookup_translator #拼音反查
+    - table_translator
+    - table_translator@easy_english #临时英文
+    - history_translator@historyDM # 重复上屏 电脑
+    - history_translator@historyDM2 # 重复上屏 电脑2
+    - history_translator@historyDM3 # 重复上屏 电脑3
+    - history_translator@historySJ # 重复上屏 手机
+    - lua_translator@number_translator # 数字转大写
+    - lua_translator@calculator_translator # 简易计算器
+    - lua_translator@shijian2_translator # 高级时间
+
+
+  filters:
+    - lua_filter@core2022  #自定义字集过滤lua；放在最上面完美解决简繁滤镜出错的问题
+    # - lua_filter@dz_ci  #过滤词组lua，单字模式
+    # - charset_filter@utf8
+    # - charset_filter@gbk
+    # - charset_filter@gb2312
+    - simplifier@simplification  #简繁滤镜
+    # - reverse_lookup_filter@reverse_lookup #反查词典滤镜
+    # - simplifier@fanjian #繁简滤镜
+    - simplifier@pinyin #拼音滤镜
+    - simplifier@chaifen #拆分滤镜
+    - simplifier@emoji_cn #表情滤镜
+    - lua_filter@charset_comment_filter #Unicode分区提示滤镜
+    - lua_filter@lua_unicode_display_filter #Unicode编码显示
+    - uniquifier #过滤重复
+
+speller:
+  auto_clear: max_length # 3种选择， manual|auto|max_length 空码按下一键确认清屏|空码自动清|达到最长码时后码顶上清屏
+  auto_select: true
+  max_code_length: 4
+  alphabet: "[;'zyxwvutsrqponmlkjihgfedcba]"
+  # initials: "abcdefghijklmnopqrstuvwxyz;'"
+  auto_select_pattern: ^;\w+ #自动上屏规则  对 [;] 引导的编码实行候选唯一自动上屏
+  # 若要添加四码上屏功能，在  ^;\w+ 后面 加上  |^\w{4}$  即可
+
+translator:
+  dictionary: tiger
+  enable_charset_filter: false
+  enable_encoder: false
+  enable_sentence: false
+  encode_commit_history: false
+  # max_phrase_length: 4
+  enable_user_dict: false
+  enable_completion: false	# 编码提示 true 开启  false 关闭
+  comment_format:  #提示码自定义
+    - "xform/~/ /" #去掉编码提示前的~号
+    # - "xform/^/ /" #提示前面 +间距
+
+
+# 拼音反查
+reverse_lookup:
+  dictionary: PY_c
+  prefix: "`"
+  tips: "〔拼音〕"
+  preedit_format:
+    - "xform/([nl])v/$1ü/"
+    - "xform/([nl])ue/$1üe/"
+    - "xform/([jqxy])v/$1u/"
+  comment_format:
+    - "xform/^/ /"
+  # suffix: "'"
+
+
+
+key_binder:
+  #  import_preset: default
+  bindings:
+    #- { when: composing, accept: Return, send: Escape } # 回车清屏编码
+    #- { accept: space, send: space, when: has_menu } # 有候选时空格上屏首选
+    #- { accept: space, send: Escape, when: composing } # 无候选(空码）时空格清屏编码
+    - { accept: semicolon, send: 2, when: has_menu } # 分号次选
+    - { when: has_menu, accept: apostrophe, send: 3 } # 引号三选
+    - { when: composing, accept: Tab, send: Escape } # tab清屏
+    - { when: has_menu, accept: minus, send: Page_Up } # - 向后翻页
+    - { when: has_menu, accept: equal, send: Page_Down } # = 向前翻页
+    # - { when: composing, accept: bracketleft, send: Page_Up } # [ 后翻
+    # - { when: composing, accept: bracketright, send: Page_Down } # ] 前翻
+    - { accept: "Control+o", toggle: simplification, when: composing }  # 简繁开关
+    # - { accept: "Control+Shift+O", toggle: fanjian, when: composing }  # 繁简开关
+    - { accept: "Control+p", toggle: pinyin, when: composing }  # PC 拼音开关
+    - { accept: "Control+i", toggle: emoji_cn, when: composing }  # PC emoji开关
+    - { accept: "Control+u", toggle: charset_comment_filter, when: composing }  # PC Unicode分区开关
+    - { accept: "Control+y", toggle: udpf_switch, when: composing }  #PC Unicode编码开关
+    - { accept: "Control+h", toggle: extended_char, when: composing } # PC 自定字集开关
+    - { accept: "Control+Shift+H", toggle: extended_char, when: composing } # PC 自定字集开关2
+    - { accept: "Control+j", toggle: chaifen, when: composing } # PC 拆分滤镜开关
+    # - { when: composing, accept: '&', toggle: emoji_cn } # 手机 emoji开关
+    # - { when: composing, accept: '*', toggle: simplification } # 手机 繁简开关
+    # - { when: composing, accept: '\', toggle: pinyin } # 手机 拼音开关
+    # - { when: composing, accept: '^', toggle: charset_comment_filter } # 手机 Unicode分区开关1
+    # - { when: composing, accept: '#', toggle: charset_comment_filter } # 手机 Unicode分区开关2
+    # - { accept: "%", toggle: udpf_switch, when: composing }  #手机 Unicode编码开关
+    # - { accept: "+", toggle: udpf_switch, when: composing }  #手机 Unicode编码开关
+    # - { when: composing, accept: '_', toggle: extended_char} # 手机 自定字集开关1
+    # - { when: composing, accept: ':', toggle: extended_char} # 手机 自定字集开关2
+    # - { when: composing, accept: '"', toggle: chaifen } # 手机 拆分滤镜开关
+    - { when: has_menu, accept: Right, send: Down } # 右方向键 向后移动焦点
+    - { when: has_menu, accept: Left, send: Up } # 左方向键 向前移动焦点
+    - { when: always, accept: "Control+semicolon", toggle: ascii_mode }
+    - { when: always, accept: "Control+period" , toggle: ascii_punct } # 中英标点切换
+    #- { when: always, accept: "Shift+space" , toggle: full_shape } # 全半角切换
+
+recognizer:
+  import_preset: default
+  patterns:
+    punct: "^/([0-9]0?|[A-Za-z]+)$"
+    # uppercase: "" #中文状态大写锁定直接上屏
+    reverse_lookup: "^`[a-z]*'?$"
+    easy_english: "^'[A-Z|a-z]*`?$"
+    expression: "^=.*$"
+
+# menu:
+  # page_size: 9 #候选数量
+  # alternative_select_labels: [ ㊀, ㊁, ㊂, ㊃, ㊄, ㊅, ㊆, ㊇, ㊈ ]  #自定义候选序号显示符
+
+historySJ:
+  input: 'z'
+  size: 1
+  initial_quality: 0
+
+historyDM:
+  input: "["
+  size: 1
+  initial_quality: 999
+
+
+historyDM2:
+  input: "'"
+  size: 1
+  initial_quality: -999
+
+historyDM3:
+  input: "]"
+  size: 1
+  initial_quality: 999
+
+# ↓简繁(+部分异体)滤镜
+simplification:  #⇩四选一
+  opencc_config: st_tu.json        # 简 ➡ 繁·异（秃版标准）
+ # opencc_config: s2tw.json    # 简 ➡ 台湾正体
+ # opencc_config: s2hk.json    # 简 ➡ 香港繁体
+ # opencc_config: s2twp.json  # 简 ➡ 台湾正体（含常用词汇如：软体→軟體、鼠标→滑鼠）
+  option_name: simplification
+  tips: all  #all字词|char字
+
+# ↓繁简滤镜
+# fanjian:
+#   opencc_config: t2s.json   # 繁 ➡ 简（OpenCC标准）
+#   option_name: fanjian
+
+# ↓拼音滤镜
+pinyin:
+  opencc_config: pinyin.json
+  option_name: pinyin
+  show_in_comment: true #作为注解在后面显示
+  comment_format:
+    - 'xform/&nbsp;/ /'
+    # - "xform/^/ /"
+  tips: char
+  tags:
+    - abc
+    - tiger
+    - tigress
+    # - reverse_lookup
+
+
+# ↓emoji表情滤镜
+emoji_cn:
+  opencc_config: emoji.json
+  option_name: emoji_cn
+  tips: all
+
+# 临时英文
+easy_english:
+  dictionary: easy_english
+  tag: easy_english
+  prefix: "'"
+  tips: 〔En〕
+  enable_completion: true
+  enable_sentence: false
+  initial_quality: -1
+  preedit_format:
+    - "xlit|_| |"
+  comment_format: #去掉编码提示前的~号
+    - "xform/~/ /"
+
+# 拆分滤镜
+chaifen:
+  opencc_config: hu_cf.json
+  option_name: chaifen
+  show_in_comment: true 
+  comment_format:     
+    - "xform/&nbsp;/ /"
+  tags:     
+    - abc
+    - tiger
+    - tigress
+    - reverse_lookup
+  tips: all #如只想给单字加滤镜，可改为 char
+
+
+punctuator:
+  import_preset: symbols

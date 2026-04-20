@@ -1,0 +1,326 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: PY_c
+  name: 拼音++
+  version: "0.18"
+  dependencies:
+    - stroke
+    - easy_english
+
+switches: # 0 默认关，1 默认开
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  # - name: extended_char  #自定义字集
+  #   reset: 1
+  #   states: [ 全字集 , 常用字 ]
+  - name: pinyin  #拼音滤镜
+    reset: 0
+    states: [ 拼, pīn ]
+  - name: emoji_cn  #emoji滤镜
+    reset: 0
+    states: [ 🈚, 🈶 ]
+  # - name: chaifen
+  #   reset: 0 
+  #   states: [ 拆隐, 拆显 ]
+  # - options: [utf8, gbk, gb2312]
+  #   reset: 0
+  #   states:
+  #     - UTF-8
+  #     - GBK
+  #     - GB2312
+  #     - BIG5
+  - name: simplification  #简转繁滤镜
+    reset: 0
+    states: [ 简中, 繁中 ]
+  - options: [_keyboard_default, _keyboard_defaultbk, _keyboard_defaultwk]
+    reset: 0
+    states: [ 有刻, 半刻, 无刻 ]
+  - name: charset_comment_filter  #字符集提示
+    reset: 0  
+    states: [ U区关, U区开 ]
+  - name: udpf_switch
+    reset: 0
+    states: [ U编关, U编开]
+  - name: ascii_punct
+    reset: 0
+    states: [ 。，, ．， ]
+  # - name: dz_ci  #过滤词组
+  #   reset: 0
+  #   states: [ 词组, 单字 ]
+  # - options: [_keyboard_default, _keyboard_defaultzj]
+  #   reset: 0
+  #   states: [ 助记关, 助记开 ]
+  # - name: fanjian  #繁转简滤镜
+  #   reset: 0
+  #   states: [ 反繁, 反简 ]
+  - name: full_shape
+    reset: 0
+    states: [ 半角, 全角 ]
+
+engine:
+  processors:
+  # 1.2版本加入的- fluid_editor # 将字符按键记入输入上下文，将输入法连缀成一串
+    - ascii_composer # 处理英文模式及中英文切换
+    - recognizer # 与 matcher 搭配，处理符合特定规则的输入码，如网址、反查等
+    - key_binder # 在特定条件下将按键绑定到其他按键，如重定义逗号、句号为候选翻页键
+    - speller # 把字母追加到编码串
+    - punctuator # 处理符号按键
+    - lua_processor@exe_processor #exe启动器
+    - selector # 选字和换页功能
+    - navigator # 移动插入点
+    - express_editor # 空格确认当前输入，其他字符直接上屏
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@easy_english #英文相关
+    - abc_segmentor # 标记输入码的类型
+    - punct_segmentor # 割界，与前后方的其他编码区分开
+    - fallback_segmentor
+  translators:
+    # - echo_translator # 没有其他结果时，创建一个与编码串一样的候选项
+    - punct_translator # 转换标点符号
+    - script_translator # 脚本表转换
+    # - table_translator@custom_phrase
+    - table_translator
+    - table_translator@easy_english #临时英文
+    - reverse_lookup_translator # 反查翻译器
+    - history_translator@historyDM # 历史上屏 电脑
+    - history_translator@historyDM2 # 历史上屏 电脑2
+    - history_translator@historyDM3 # 历史上屏 电脑3
+    - history_translator@historySJ # 历史上屏 手机  
+    - lua_translator@number_translator # 数字转大写
+    - lua_translator@calculator_translator # 简易计算器
+    - lua_translator@shijian2_translator # 高级时间
+
+
+  filters:
+    # - lua_filter@core2022  #自定义字集过滤lua；放在最上面完美解决简繁滤镜出错的问题
+    # - lua_filter@dz_ci  #过滤词组lua，单字模式
+    # - charset_filter@utf8
+    # - charset_filter@gbk
+    # - charset_filter@gb2312
+    # - charset_filter@big5
+    - simplifier@simplification  #简繁滤镜
+    # - simplifier@fanjian  #繁简滤镜
+    - simplifier@pinyin  #拼音滤镜
+    - simplifier@emoji_cn  #表情滤镜
+    - lua_filter@charset_comment_filter #Unicode分区提示滤镜
+    - lua_filter@lua_unicode_display_filter #Unicode编码显示
+    - uniquifier  # 过滤重复的候选字，可能来自简繁转换
+
+speller:
+  alphabet: "['zyxwvutsrqponmlkjihgfedcba]" # 输入范围 码元
+  delimiter: " '" 
+  # auto_select: true
+  # auto_select_pattern: ^;\w+ #自动上屏规则 对 [;] 开头的编码实行候选唯一自动上屏
+  algebra:
+    - abbrev/^([a-z]).+$/$1/
+    - abbrev/^([zcs]h).+$/$1/
+    # - derive/^([nl])ue$/$1ve/
+    # - derive/^([jqxy])u/$1v/
+    # - derive/un$/uen/
+    # - derive/ui$/uei/
+    # - derive/iu$/iou/
+    # - derive/([aeiou])ng$/$1gn/
+    # - derive/([dtngkhrzcs])o(u|ng)$/$1o/
+    # - derive/ong$/on/
+    # - derive/ao$/oa/
+    # - derive/([iu])a(o|ng?)$/a$1$2/
+
+# 说明
+# xform --改寫〔不保留原形〕
+# derive --衍生〔保留原形〕
+# abbrev --簡拼〔出字優先級較上兩組更低〕
+# fuzz --畧拼〔此種簡拼僅組詞，不出單字〕
+# xlit --變換〔適合大量一對一變換〕
+# erase --刪除
+
+translator:
+  dictionary: PY_c #字典文件
+  prism: PY_c
+  initial_quality: 1    #该翻译器出字优先级别
+  enable_user_dict: true # 开启用户词典〔用户词典记录动态字词频、用户词〕
+  enable_encoder: true # 开启自动造词
+  strict_spelling: false
+  enable_sentence: false # 是否开启自动造句
+  enable_completion: false # 编码提示 true 开启  false 关闭
+  encode_commit_history: true # 是否对已上屏的词自动造词
+  max_phrase_length: 99  #自动造词的最长字数
+  user_dict: PY_c    #在本地生成的用户词典名称
+  db_class: tabledb  #用户词典格式，tabledb（文本） 或 userdb （二进制）
+  comment_format:  #提示码自定义
+    - "xform/~/ /" #去掉编码提示前的~号
+  # disable_user_dict_for_patterns:
+  # #  - "^z.*$"  #这是原始默认设置
+  #   - "^[a-y]{1,2}$"  #2码及以下不使用自动调频、不自动造词
+  preedit_format: # 上屏码自定义
+    - xform/([nl])v/$1ü/ # 拼音状态下输入nv实际显示nü
+    - xform/([nl])ue/$1üe/ # n或者l后面紧跟着输入ue显示üe
+    - xform/([jqxy])v/$1u/ # j q x y 后面紧跟着输入v 实际显示u
+  #contextual_suggestions: true
+  #max_homophones: 7
+  #max_homographs: 7
+
+
+key_binder:
+  #  import_preset: default
+  bindings:
+    - { accept: semicolon, send: 2, when: has_menu } # 分号次选
+    - { when: has_menu, accept: apostrophe, send: 3 } # 引号三选
+    - { when: composing, accept: Tab, send: Escape } # tab清屏
+    - { when: has_menu, accept: minus, send: Page_Up } # - 向后翻页
+    - { when: has_menu, accept: equal, send: Page_Down } # = 向前翻页
+    # - { when: composing, accept: bracketleft, send: Page_Up } # [ 后翻
+    # - { when: composing, accept: bracketright, send: Page_Down } # ] 前翻
+    - { accept: "Control+o", toggle: simplification, when: composing }  # 简繁开关
+    # - { accept: "Control+Shift+O", toggle: fanjian, when: composing }  # 繁简开关
+    - { accept: "Control+p", toggle: pinyin, when: composing }  # PC 拼音开关
+    - { accept: "Control+i", toggle: emoji_cn, when: composing }  # PC emoji开关
+    - { accept: "Control+u", toggle: charset_comment_filter, when: composing }  # PC Unicode分区开关
+    - { accept: "Control+y", toggle: udpf_switch, when: composing }  #PC Unicode编码开关
+    # - { accept: "Control+h", toggle: extended_char, when: composing } # PC 自定字集开关
+    # - { accept: "Control+j", toggle: chaifen, when: composing } # PC 拆分滤镜开关
+    # - { when: composing, accept: '&', toggle: emoji_cn } # 手机 emoji开关
+    # - { when: composing, accept: '*', toggle: simplification } # 手机 繁简开关
+    # - { when: composing, accept: '\', toggle: pinyin } # 手机 拼音开关
+    # - { when: composing, accept: '^', toggle: charset_comment_filter } # 手机 Unicode分区开关1
+    # - { when: composing, accept: '#', toggle: charset_comment_filter } # 手机 Unicode分区开关2
+    # - { accept: "%", toggle: udpf_switch, when: composing }  #手机 Unicode编码开关
+    # - { accept: "+", toggle: udpf_switch, when: composing }  #手机 Unicode编码开关
+    # - { when: composing, accept: '_', toggle: extended_char} # 手机 自定字集开关1
+    # - { when: composing, accept: ':', toggle: extended_char} # 手机 自定字集开关2
+    # - { when: composing, accept: '"', toggle: chaifen } # 手机 拆分滤镜开关
+    # - { when: has_menu, accept: Right, send: Down } # 右方向键 向后移动焦点
+    # - { when: has_menu, accept: Left, send: Up } # 左方向键 向前移动焦点
+    - { when: always, accept: "Control+semicolon", toggle: ascii_mode }
+    - { when: always, accept: "Control+period" , toggle: ascii_punct } # 中英标点切换
+    - { when: always, accept: "Shift+space" , toggle: full_shape } # 全半角切换
+
+# custom_phrase:
+#   dictionary: ""
+#   user_dict: custom_phrase
+#   db_class: stabledb
+#   enable_completion: false
+#   enable_sentence: false
+#   initial_quality: 1
+
+
+recognizer:
+  import_preset: default
+  patterns:
+    punct: "^/([0-9]0?|[A-Za-z]+)$"
+    easy_english: "^'[A-Z|a-z]*`?$"
+    expression: "^=.*$"
+    reverse_lookup: "`[a-z]*'?$"
+
+
+historyDM:
+  input: "["
+  size: 1
+  initial_quality: 999
+
+historyDM2:
+  input: "'"
+  size: 1
+  initial_quality: -999
+
+historyDM3:
+  input: "]"
+  size: 1
+  initial_quality: 999
+
+# 笔画反查
+reverse_lookup:
+  dictionary: stroke
+  enable_completion: true
+  prefix: "`"
+  suffix: "'"
+  tips: 〔笔画〕
+  preedit_format:
+    - xlit/hspnz/一丨丿丶ㄥ/
+  comment_format:
+    # - xform/([nl])v/$1ü/
+    - "xform/^/ /"
+
+
+# ↓简繁(+部分异体)滤镜
+simplification:  #⇩四选一
+  opencc_config: st_tu.json        # 简 ➡ 繁（秃版CC标准） 
+ # opencc_config: s2tw.json    # 简 ➡ 台湾正体
+ # opencc_config: s2hk.json    # 简 ➡ 香港繁体
+ # opencc_config: s2twp.json  # 简 ➡ 台湾正体（含常用词汇如：软体→軟體、鼠标→滑鼠）
+  option_name: simplification
+  tips: all  # # 转换文字段 all字词|char字 
+
+# ↓繁简滤镜
+# fanjian:
+#   opencc_config: t2s.json   # 繁 ➡ 简（OpenCC标准）
+#   option_name: fanjian
+
+# ↓拼音滤镜
+pinyin:
+  opencc_config: pinyin.json
+  option_name: pinyin
+  show_in_comment: true #作为注解在后面显示
+  comment_format:
+    - 'xform/&nbsp;/ /'
+    - "xform/^/ /"
+  tips: char
+  tags:
+    - abc
+    - reverse_lookup
+
+
+
+# ↓emoji表情滤镜
+emoji_cn:
+  opencc_config: emoji.json
+  option_name: emoji_cn
+  tips: all
+
+# 临时英文
+easy_english:
+  dictionary: easy_english
+  tag: easy_english
+  prefix: "'"
+  tips: 〔En〕
+  enable_completion: true
+  enable_sentence: false
+  initial_quality: -1
+  preedit_format:
+    - "xlit|_| |"
+  comment_format: #去掉编码提示前的~号
+    - "xform/~/ /"
+
+menu:
+  page_size: 5 #候选数量
+  # alternative_select_labels: [ ㊀, ㊁, ㊂, ㊃, ㊄, ㊅, ㊆, ㊇, ㊈ ]  #自定义候选序号显示符
+  # 以下是备选样式（自行删除#号生效，只能生效一种）
+  # menu/alternative_select_labels: [ 1,2,3,4,5,6,7,8,9,0 ]
+  #menu/alternative_select_labels: [ ①,②,③,④,⑤,⑥,⑦,⑧,⑨,⑩ ]
+  #menu/alternative_select_labels: [ ❶,❷,❸,❹,❺,❻,❼,❽,❾,❿ ]
+  #menu/alternative_select_labels: [ ⓵,⓶,⓷,⓸,⓹,⓺,⓻,⓼,⓽,⓾ ]
+  #menu/alternative_select_labels: [ ㊀,㊁,㊂,㊃,㊄,㊅,㊆,㊇,㊈,㊉ ]
+  #menu/alternative_select_labels: [ ㈠,㈡,㈢,㈣,㈤,㈥,㈦,㈧,㈨,㈩ ]
+  #menu/alternative_select_labels: [ 🀇,🀈,🀉,🀊,🀋,🀌,🀍,🀎,🀏,🀄 ]
+  #menu/alternative_select_labels: [ Ⅰ,Ⅱ,Ⅲ,Ⅳ,Ⅴ,Ⅵ,Ⅶ,Ⅷ,Ⅸ,Ⅹ ]
+  #menu/alternative_select_labels: [ ⅰ,ⅱ,ⅲ,ⅳ,ⅴ,ⅵ,ⅶ,ⅷ,ⅸ,ⅹ ]
+  #menu/alternative_select_labels: [ Ⓐ,Ⓑ,Ⓒ,Ⓓ,Ⓔ,Ⓕ,Ⓖ,Ⓗ,Ⓘ,Ⓙ ]
+  #menu/alternative_select_labels: [ ⓐ,ⓑ,ⓒ,ⓓ,ⓔ,ⓕ,ⓖ,ⓗ,ⓘ,ⓙ ]
+
+style:
+  horizontal: false # 默认false竖排显示,改为true可横排显示
+  inline_preedit: false # 嵌入编码模式，改为true可开启
+  # preedit_type: composition # 有3个选项可设：input 嵌入输入码 | composition 嵌入编码 | preview 嵌入首选项
+  # font_face: "Consolas, Segoe UI Emoji, Noto Color Emoji, TumanPUA, LXGW WenKai GB Screen R, SimSun, SimSun-ExtB, SimSun-ExtG, TH-Tshyn-P0, TH-Tshyn-P1, TH-Tshyn-P2, TH-Tshyn-P16, FSung-1, FSung-2, FSung-3, FSung-F, FSung-X"
+  # font_point: 15 # 字号大小
+  # label_font_face: "Consolas, Segoe UI Emoji, Noto Color Emoji, TumanPUA, LXGW WenKai GB Screen R, SimSun, SimSun-ExtB, SimSun-ExtG, TH-Tshyn-P0, TH-Tshyn-P1, TH-Tshyn-P2, TH-Tshyn-P16, FSung-1, FSung-2, FSung-3, FSung-F, FSung-X"
+  # label_font_point: 15
+  # comment_font_face: "LXGW WenKai GB Screen R, SimSun, SimSun-ExtB, SimSun-ExtG, TH-Tshyn-P0, TH-Tshyn-P1, TH-Tshyn-P2, TH-Tshyn-P16, FSung-1, FSung-2, FSung-3, FSung-F, FSung-X"
+  # comment_font_point: 15
+
+punctuator: # 设定符号表，这里直接导入外部的symbols文件夹
+  import_preset: symbols

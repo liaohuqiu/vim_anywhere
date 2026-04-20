@@ -497,30 +497,23 @@ nmap <leader>9 :set fileencoding=cp936<cr>:w<cr>:set fenc<cr>
 nmap <leader>w :w!<cr>
 nmap <leader>e :e
 
-" 复制路径与行号范围
+" 复制带前缀的路径
 " ---
-" English: copy path with line range
-function! CopyPathWithLineRange()
+" English: copy path with @ prefix
+function! CopyPathWithPrefix()
     let l:file = expand('%:p')
     if empty(l:file)
         return
     endif
 
-    let l:start = line("'<")
-    let l:end = line("'>")
-    if l:start == 0 || l:end == 0
-        let l:start = line('.')
-        let l:end = l:start
-    endif
-
-    let l:text = '@' . l:file . ':' . l:start . '-' . l:end
+    let l:text = '@' . l:file
     let @+ = l:text
     let @" = l:text
     echo l:text
 endfunction
 
-nnoremap <silent> <leader>cn :call CopyPathWithLineRange()<CR>
-xnoremap <silent> <special> <leader>cn :<C-u>call CopyPathWithLineRange()<CR>
+nnoremap <silent> <leader>cn :call CopyPathWithPrefix()<CR>
+xnoremap <silent> <special> <leader>cn :<C-u>call CopyPathWithPrefix()<CR>
 
 " add NERDTREE plugin for dir view on left window, making a shortcut here Ctrl+n=:NERDTreeToggle
 nmap <C-n> :NERDTreeToggle<CR>
