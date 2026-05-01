@@ -513,7 +513,21 @@ function! CopyPathWithPrefix()
 endfunction
 
 nnoremap <silent> <leader>cn :call CopyPathWithPrefix()<CR>
-xnoremap <silent> <special> <leader>cn :<C-u>call CopyPathWithPrefix()<CR>
+xnoremap <silent> <special> <leader>cn :<C-u>call CopyPathWithRange()<CR>
+
+function! CopyPathWithRange()
+    let l:file = expand('%:p')
+    if empty(l:file)
+        return
+    endif
+
+    let l:start = line("'<")
+    let l:end = line("'>")
+    let l:text = l:file . ':' . l:start . '-' . l:end
+    let @+ = l:text
+    let @" = l:text
+    echo l:text
+endfunction
 
 " add NERDTREE plugin for dir view on left window, making a shortcut here Ctrl+n=:NERDTreeToggle
 nmap <C-n> :NERDTreeToggle<CR>
