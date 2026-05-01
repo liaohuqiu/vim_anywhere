@@ -497,16 +497,16 @@ nmap <leader>9 :set fileencoding=cp936<cr>:w<cr>:set fenc<cr>
 nmap <leader>w :w!<cr>
 nmap <leader>e :e
 
-" 复制带前缀的路径
+" 复制当前文件路径
 " ---
-" English: copy path with @ prefix
+" English: copy path
 function! CopyPathWithPrefix()
     let l:file = expand('%:p')
     if empty(l:file)
         return
     endif
 
-    let l:text = '@' . l:file
+    let l:text = l:file
     let @+ = l:text
     let @" = l:text
     echo l:text

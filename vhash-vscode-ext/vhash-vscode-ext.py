@@ -110,7 +110,7 @@ class PathInfo:
 class App(functocli.BaseCliApp):
 
     def __init__(self, install_for_cursor=True, install_for_default_profile=True):
-        functocli.BaseCliApp.__init__(self)
+        functocli.BaseCliApp.__init__(self, 'vhash-vscode-ext')
         self._ext_dir = Path(__file__).resolve().parent
         self.path_info = PathInfo(
             ext_dir=self._ext_dir,
